@@ -58,7 +58,15 @@ To solve this bug, I traced forward until I found where the database was being m
 
 ## Exercise 2
 
-[[Your answer goes here!]]
+This program throws an error with the following message: `KeyError: 'name'` and it specifies that the error originates on line 52 in forming the dictionary object using the API call `result_json` variable.
+
+I traced backwards from this line to figure out why the API call result was not being parsed correctly.
+
+On line 42 where the `params` dictionary is defined, the field it uses for the city name has a key of `place`. According to the OpenWeatherMap API, this key should be named `q` rather than `place`. I fixed the bug by renaming it.
+
+I continued to trace backwards and found that lines 39 and 40 are saving the values sent by the user from the html form elements, but the strings for the name attributes don't match up with what's actually in the html elements. I fixed this bug by making the following changes:
+- `city = request.args.get('users_city')` -> `city = request.args.get('city')`
+- `units = request.args.get('requested_units')` -> `units = request.args.get('units')`
 
 ## Exercise 3
 
