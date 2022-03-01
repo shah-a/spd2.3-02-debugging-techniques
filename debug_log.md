@@ -70,4 +70,32 @@ I continued to trace backwards and found that lines 39 and 40 are saving the val
 
 ## Exercise 3
 
-[[Your answer goes here!]]
+For starters, we know we have two functions so we can divide and conquer and solving each one individually. Let's start with `merge_sort`:
+
+### Merge Sort
+
+When running the program, an error is thrown from line 37 saying that the list index is out of range. Since we know the exact location of the problem, we can try tracing backwards from there.
+
+When checking for left over items, one of the while loops uses `i` as its index variable (like so: `arr[k] = right_side[i]`) and the second one is supposed to use `j` (like so: `arr[k] = right_side[j]`). However, in this program, both of the loops are using `i` and this would cause problems with the index count.
+
+I resolved this issue by updating the second while loop to use `j` as intended. There's also an issue in both while loops that the `k` counter is not being incremented as it was done so in the very first while loop where elements are copied to temporary arrays for the left and right side.
+
+If we re-run the program, we see that the list is being sorted correctly. However, its order is reversed (i.e. it sorts from largest to smallest rather than smallest to largest as expected). To solve this, we can trace forward from the beginning of the function until we find the part responsible for making element comparisons.
+
+We find this to be on line 23 and we can resolve the issue by changing `if left_side[i] > right_side[j]:` to `if left_side[i] < right_side[j]:`
+
+Now, to solve `binary_search`:
+
+### Binary Search
+
+When we run the program, we have an error on line 53 that sasys `TypeError: list indices must be integers or slices, not float`
+
+We can trace backwards from line 53 until we find where the list index variable `mid` is assigned a non-integer value. We find that on line 50, the `mid` variable is being assigned the result of a division operator. The intended action here was an integer division, so we can solve the bug by changing `mid = (high + low) / 2` to `mid = (high + low) // 2`
+
+There is also a bug in some cases where a false negative is reported by the searching algorithm.
+
+To find the source of the bug, we can trace forward from the beginning of the algorithm.
+
+When we get to the line where comparisons are being made between the high and low ends of the index range, the condition is `while low < high:`, but this will cause certain scenarios where elements will be skipped.
+
+To resolve this issue, I updated the condition to be: `while low <= high:`
